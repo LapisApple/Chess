@@ -1,0 +1,13 @@
+# Ignore all executables
+sheet*/exercise*/*
+!sheet*/exercise*/*.*
+sheet*/exercise*/*.exe
+sheet*/exercise*/*.out
+/.idea
+*/cmake-build-debug/*
+/hello-world
+/log-factorial
+/*.exe
+/palindrome
+/vigenere
+sheet*/exercise*/*.o
