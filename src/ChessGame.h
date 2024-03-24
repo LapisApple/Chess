@@ -13,6 +13,7 @@
 #include "IO/Print/Print.h"
 #include "Check/CheckMate.h"
 #include "Types/Move/UserMove.h"
+#include "Bot/Evaluation/Evaluate.h"
 
 enum class Result: int8_t { SUCCESS, FAILURE };
 
@@ -145,6 +146,10 @@ public:
     [[nodiscard]] inline bool enemy_is_in_checkmate() const {
         const bool is_checkmated = CheckMate::isCheckMated(board, Team::getEnemyTeam(current_player));
         return is_checkmated;
+    }
+
+    [[nodiscard]] constexpr int evaluate() const {
+        return ::evaluate(board, current_player);
     }
 };
 

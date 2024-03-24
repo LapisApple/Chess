@@ -29,11 +29,12 @@ constexpr int protected_king_factor = 2;
  * @brief Struct to hold the board value for midgame and endgame.
  *
  * @note
- * index 0 = the midgame value \n
- * index 1 = the endgame value
+ * mg = the midgame value \n
+ * eg = the endgame value
  */
 struct BoardValue {
-    int values[2] = {0};
+    int mg = 0;
+    int eg = 0;
 };
 
 /**
@@ -52,8 +53,8 @@ constexpr BoardValue piece_values(const Board& board, Team::Team team, int& mid_
     for (int i = 1; i < PIECETYPE_AMOUNT; ++i) {
         PieceType::PieceType type = static_cast<PieceType::PieceType>(i);
         int amount_pieces = board.positions.getAmount(team, type);
-        value.values[0] = amount_pieces * mg_value[i];
-        value.values[1] = amount_pieces * eg_value[i];
+        value.mg += amount_pieces * mg_value[i];
+        value.eg += amount_pieces * eg_value[i];
         mid_game_percentage += amount_pieces * mid_game_factors[type];
     }
     return value;
@@ -78,8 +79,8 @@ constexpr BoardValue positional_advantage(const Board& board) {
         for (int j = 0; j < pos_list.size; ++j) {
             int8_t current_pos = pos_list[j];
             int8_t table_pos = current_pos ^ flip_row;
-            value.values[0] = mg_pesto_table[type][table_pos];
-            value.values[1] = eg_pesto_table[type][table_pos];
+            value.mg += mg_pesto_table[type][table_pos];
+            value.eg += eg_pesto_table[type][table_pos];
         }
     }
     return value;
@@ -146,9 +147,9 @@ constexpr int evaluate(const Board& board, Team::Team player) {
 // modified because the original code is basically unintelligible
 
     // score as if the board is currently in the midgame
-    int midgame_score = (white_piece_value.values[0] - black_piece_value.values[0]) + (white_pesto.values[0] - black_pesto.values[0]);
+    int midgame_score = (white_piece_value.mg - black_piece_value.mg) + (white_pesto.mg - black_pesto.mg);
     // score as if the board is currently in the endgame
-    int endgame_score = (white_piece_value.values[1] - black_piece_value.values[1]) + (white_pesto.values[1] - black_pesto.values[1]);
+    int endgame_score = (white_piece_value.eg - black_piece_value.eg) + (white_pesto.eg - black_pesto.eg);
     // cap midgame phase percentage to 24
     mid_game_phase_percentage = std::min(mid_game_phase_percentage, max_phase_percentage);
     // make inverse of midgame phase percentage into endgame phase percentage
@@ -165,8 +166,12 @@ constexpr int evaluate(const Board& board, Team::Team player) {
     // reuse the previously calculated percentage of how far the board is still in the midgame here
     result_score += difference_king_protection * mid_game_phase_percentage;
 
+    // just realized: basically useless because all scores are calculated ath the same depth
+    // meaning the following just shifts all values in one direction for now
+    // will get useful if evaluate is called at different depths
+#ifdef NON_DEBUG
     // mover's advantage
     result_score += current_player_factor * movers_advantage * max_phase_percentage;
-
+#endif
     return result_score;
 }

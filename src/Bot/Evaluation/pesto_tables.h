@@ -152,7 +152,7 @@ constexpr int eg_king_table[64] = {
 };
 
 // also changed order for the same reason
-const int* mg_pesto_table[7] =
+inline const int* mg_pesto_table[7] =
         {
                 nullptr,
                 mg_king_table,
@@ -163,7 +163,7 @@ const int* mg_pesto_table[7] =
                 mg_pawn_table,
         };
 
-const int* eg_pesto_table[7] =
+inline const int* eg_pesto_table[7] =
         {
                 nullptr,
                 eg_king_table,

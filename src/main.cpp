@@ -30,6 +30,9 @@ void takeCareOfCommands(ChessGame& game, const std::string_view& line) {
     }  else if (stringStartsWith(line, "/bestMove")) {
         SlimOptional<Move> best_move = game.getBestMove();
         game.printMove(std::cout, best_move.data);
+    }  else if (stringStartsWith(line, "/evaluate")) {
+        const int score = game.evaluate();
+        std::cout << score << std::endl;
     } else {
         std::cout << "unknown command" << std::endl;
     }
@@ -81,7 +84,68 @@ void mainGameLoop() {
     }
 }
 
+
+int getEval(std::string_view fen_str) {
+    Fen fen = Fen();
+    try {
+        fen = Fen::buildFenFromStr(fen_str);
+    } catch (const FenParsingException& fenException) {
+        std::cerr << fenException.what() << std::endl;
+        std::terminate();
+    }
+    ChessGame lBoard = ChessGame(fen);
+
+
+    int score = lBoard.evaluate();
+    return score;
+}
+
+template<typename fn>
+void assertEval(std::string_view lhs, fn& compare, std::string_view rhs) {
+    int lScore = getEval(lhs);
+    int rScore = getEval(rhs);
+
+    const bool correct = compare(lScore, rScore);
+    if (correct) {
+        std::cout << lScore << " - " << rScore << std::endl;
+    } else {
+        std::cout << lhs << "\n" << rhs << "\n";
+        std::cout << lScore << " - " << rScore << std::endl;
+    }
+
+    assert(correct);
+}
+
+template<typename fn>
+void assertNum(int value, fn& compare, std::string_view str) {
+    int score = getEval(str);
+
+    const bool correct = compare(value, score);
+    if (correct) {
+        std::cout << value << " - " << score << std::endl;
+    } else {
+        std::cout << str << "\n";
+        std::cout << value << " - " << score << std::endl;
+    }
+
+    assert(correct);
+}
+
+void testEval() {
+    auto equal = [](int a, int b) -> bool {return a == b;};
+    auto less_than = [](int a, int b) -> bool {return a < b;};
+    auto greater_than = [](int a, int b) -> bool {return a > b;};
+
+    assertEval("k7/7B/8/8/8/8/7b/K7 w - - 0 1", equal, "k7/7B/8/8/8/8/7b/K7 b - - 0 1");
+    assertNum(0, equal, "k7/7B/8/8/8/8/7b/K7 w - - 0 1");
+    assertNum(0, equal, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    assertNum(100, less_than, "k7/7P/8/8/8/7p/8/K7 w - - 0 1");
+    assertNum(0, less_than, "rnbqkbnr/8/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+}
+
 int main() {
+    testEval();
+    std::cout << "fin \n";
     mainGameLoop();
 }
 
