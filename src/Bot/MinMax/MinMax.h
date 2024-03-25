@@ -4,7 +4,6 @@
 
 #pragma once
 
-
 #include "../../Board/Board.h"
 
 /**
@@ -14,9 +13,9 @@
  * @param depth The depth to which the game tree should be explored \n
  * (if \< 1 -\> function works as if depth = 1 e.g. one move ahead will still be tested)
  * @param player The team for which the best possible Move is searched for
- * @param currentTurn roughly the amount of half turns that have past
+ * @param current_half_turn roughly the amount of half turns that have past since the start
  * @return The best move possible for the specified player, or nullopt if no move is possible
  *
  * @note first checks if the board is actually legal meaning both kings exist in order to establish some invariance
  */
-SlimOptional<Move> MinMax(const Board& board, int depth, Team::Team player, int currentTurn);
+SlimOptional<Move> MinMax(const Board& board, int depth, Team::Team player, int current_half_turn);

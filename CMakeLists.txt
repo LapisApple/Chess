@@ -13,7 +13,6 @@ add_executable(Chess2
         src/Types/SlimOptional.h
         src/Types/Move/Move.h
         src/Types/BasicChessTypes.h
-        src/Defines.h
         src/IO/Parser/FenParsing.cpp
         src/IO/Parser/FenParsing.h
         src/PossibleMoves/PossibleMoves.h
@@ -29,11 +28,12 @@ add_executable(Chess2
         src/IO/Print/Print.cpp
         src/IO/Parser/StringParsing.h
         src/Board/Board_Correctness.h
-        Test/Implementation/Perft.h
         src/IO/Parser/FenParsingException.h
-        src/ChessConstants.h
+        src/Types/ChessConstants.h
         src/Types/Move/ExecutedMove.h
         src/Types/Move/UserMove.h
         src/Bot/Evaluation/pesto_tables.h
-        Test/Implementation/debugHelperFuncs/PerftHelperFuncs.h
+        src/Bot/Evaluation/Evaluate.cpp
+        src/MainGameLoop.cpp
+        src/MainGameLoop.h
 )
