@@ -2,7 +2,7 @@
 
 G++ = g++
 
-G++_FLAGS = -std=c++17 -c -O3 -Wall -Wextra -Wpedantic
+G++_FLAGS = -std=c++17 -c -O3 -Wall -Wextra -Wpedantic -DNO_ASSERTS
 LD_FLAGS = -L /usr/local/lib -l pthread
 
 OBJECTS =  main.o PossibleMoves.o Print.o FenParsing.o Check.o MinMax.o Evaluate.o MainGameLoop.o
