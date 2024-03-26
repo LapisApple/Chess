@@ -6,7 +6,6 @@
 #include <climits>
 #include <string_view>
 
-#include "../../Defines.h"
 #include "../../Types/BasicChessTypes.h"
 #include "../../Types/SlimOptional.h"
 #include "FenParsingException.h"

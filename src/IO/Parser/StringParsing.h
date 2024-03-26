@@ -6,7 +6,6 @@
 
 #include <string_view>
 
-#include "../../Defines.h"
 #include "../../Types/BasicChessTypes.h"
 #include "../../Types/Move/UserMove.h"
 #include "../../Types/SlimOptional.h"

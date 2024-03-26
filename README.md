@@ -36,15 +36,69 @@ Während der Ausführung des Programms im Terminal stehen auch noch folgende Bef
 * `/undo` setzt, falls möglich, die letzten zwei Moves zurück, d.h. der letzte Bot und der letzte Spieler Move werden rückgängig gemacht.
 
 
-## wichtigste Klassen und Ordner
+## wichtigste Klassen und Funktionen
 
 ### Board
 
-### FenParsing
+
+| Wo?    | `src/Board/Board.h`, und allen Dateien in `src/Board/Board_impl/`, (+ `src/Board/Board_Correctness.h` zum Testen)                                                                                                                                                                 |
+|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Was?   | Das Schachbrett sozusagen auf dem man unter anderem einen Move ausführen kann mit  `movePiece()` und einen Move zurücksetzen kann mit `undoMove()`, und Zugriff bekommt auf dessen unterliegenden Schachbrett Darstellungen, welche wiederum weitere hilfreiche Methoden besitzen |
+| wofür? | Kapselung der Teilweise komplizierten Logik hinter einem Move in relativ einfache, verständliche public Methoden, um über diese dann viele Funktionalitäten in Schach zu realisieren                                                                                              |
+
+
+
+### FenParsing mit der Fen und FenStringReader Klasse
+
+
+| Wo?    | `src/IO/Perser/FenParsing.h`, `src/IO/Perser/FenParsing.cpp`  und `src/IO/Perser/FenParsingException.h`                                                                                                               |
+|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Was?   | Funktionalität um einen Fen einzulesen (`Fen::buildFenFromStr()`), wobei jeder eigene Teil des FEN in einer eigenen kleinen Funktion geparst und getestet wird mittels der dabei hilfreichen `FenStringReader` Klasse |
+| wofür? | Um die Benutzereingabe abgesichert durchgehen zu können, um auf nicht legale FEN zu prüfen, und um auch Fen zu akzeptieren, die auch etwas komisch aussehen können, aber trotzdem ein eindeutiges Schachbrett liefern |
+
+
+### King Check Funktionalität
+
+| Wo?    | `src/Check/Check.h` und `src/Check/Check.cpp`                                                                                                           |
+|--------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Was?   | einfache Funktion, die einfach nur berechnet ob ein gegebener König gerade im Check steht oder nicht `Check::isChecked()`                               |
+| wofür? | wird zum Testen von CheckMate und zur erzeugen von legalen Moves die den eigenen King nicht in Schach Stellen benutzt, sowie innerhalb MinMax und Perft |
+
+
+
+### PossibleMoves Namespace
+
+| Wo?    | `src/PossibleMoves/PossibleMoves.h` und `src/PossibleMoves/PossibleMoves.cpp`                                                                                                                                                                                                                           |
+|--------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Was?   | Funktionalität um alle Pseudo legalen Moves für ein bestimmtes Schachbrett und einem bestimmten Team zu erzeugen (`PossibleMoves::getAllPossibleMoves()`). Und Funktionalität im davon Moves, die sich selbst in CheckMate setzen zu entfernen (`PossibleMoves::trimMovesPuttingPlayerIntoCheckmate()`) |
+| wofür? | Für das erzeugen von möglichen Moves für MinMax und Perft und dem Testen, dass der Spieler auch wirklich legale Moves macht                                                                                                                                                                             |
+
+
 
 ### Bot
 
+| Wo?    | `src/Bot/MinMax/` und `src/Bot/Evaluation/`                                                                                                                                                                                                                                                                      |
+|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Was?   | Die Funktionalität für einen Schachbot. Einmal eine Implementation eines MinMax Algorithmus, der nicht `undoMove()` benutzt sondern immer das Board kopiert weil undo ca. 10% langsamer war in Perft. Und Der Am Anfang schon genannten Evaluationsfunktion mit der man verschiedene Boards im MinMax vergleicht |
+| wofür? | Zur Implementierung des Projektziels, einem Schach Bot im Terminal                                                                                                                                                                                                                                               |
+
+
+
 ### ChessGame
+
+
+| Wo?    | `src/ChessGame.h`                                                                                    |
+|--------|------------------------------------------------------------------------------------------------------|
+| Was?   | eine Art Wrapper Klasse um alle andere Funktionalität, für eine einfache und einheitliche public API |
+
+
+
+### MainGameLoop
+
+
+| Wo?  | `src/MainGameLoop.h` und  `src/MainGameLoop.cpp`                                                                                                                                               |
+|------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Was? | Der Loop des Schach Spiels im Terminal mit den am Anfang vorgestellten Commands, weitere Logik zum Schachbrett einlesen, und das richtige Handhaben bei einem Sieg oder Verlieren des Spielers |
 
 
 ## Programmierkonzepte

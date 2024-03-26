@@ -4,8 +4,6 @@
 
 #include "PossibleMoves.h"
 
-#include "../Check/Check.h"
-
 // helper methods
 /**
  * @brief Checks if a move is possible (i.e. inside the board and not taking sown piece)

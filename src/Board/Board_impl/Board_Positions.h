@@ -6,7 +6,6 @@
 #include <cassert>
 #include <cstdint>
 
-#include "../../Defines.h"
 #include "../../Types/BasicChessTypes.h"
 #include "Board_8x8.h"
 
