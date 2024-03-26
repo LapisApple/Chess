@@ -7,8 +7,6 @@
 #include <cassert>
 #include <cstdint>
 
-#include "../Defines.h"
-
 /**
  * @brief the amount of different Piece types that exist (i.e. including None)
  */

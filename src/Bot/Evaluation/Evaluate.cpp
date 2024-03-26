@@ -150,9 +150,9 @@ int evaluateBoard(const Board& board, Team::Team) {
   // reuse the previously calculated percentage of how far the board is still in the midgame here
   result_score += difference_king_protection * mid_game_phase_percentage;
 
-  // just realized: basically useless because all scores are calculated at the same depth
+  // just realized: the following is basically useless because all scores are calculated at the same depth
   // meaning the following just shifts all values in one direction for now
-  // will get useful if evaluate is called at different depths, so I'll keep it for now
+  // should get useful if evaluate is called at different depths, so I'll keep it for now
 #ifdef DIFFERENT_DEPTHS
   // mover's advantage
   result_score += current_player_factor * movers_advantage * max_phase_percentage;

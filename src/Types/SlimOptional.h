@@ -6,7 +6,6 @@
 
 #include <cstdint>
 
-#include "../Defines.h"
 #include "BasicChessTypes.h"
 
 /**

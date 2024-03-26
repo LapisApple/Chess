@@ -6,8 +6,6 @@
 #include <cassert>
 #include <cstdint>
 
-#include "../Defines.h"
-
 /** @brief a simple struct to represent a 2D position on the board
  *
  * the position starts on the top left of the board. (x goes to the right up to 7, y down and up to 7)
