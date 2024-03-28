@@ -140,7 +140,7 @@ class Board_8x8 {
 // Explosion
       if (capture.type != PieceType::NONE) explodeArea(Vec2::newVec2(move.to));
       // Pawn being removed after capturing another Pawn
-      if (move.piece.type == PieceType::PAWN && capture.type == PieceType::PAWN) board[move.to] = Piece::getEmpty();
+      if (move.piece.type == PieceType::PAWN) board[move.to] = Piece::getEmpty();
 #endif
 
     return capture;
