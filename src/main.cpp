@@ -12,7 +12,9 @@
 #include <vector>
 
 #include "../Test/Main_Folder_Path_For_Testing.h"
-
+/*
+ *
+ *
 namespace Check {
     bool atomicCheck(const Board& board, Team::Team player) {
         Team::Team enemy = Team::getEnemyTeam(player);
@@ -112,10 +114,105 @@ void atomicPerft() {
         }
     }
 }
+ *
+ *
+ * */
 
+
+////////////////////////////////
+
+inline uint64_t Perft_impl(Board board, int depth, Team::Team team, Move prev_move) {
+    Team::Team enemy = Team::getEnemyTeam(team);
+    // get the new board
+#ifndef CREATING_MOVE_TEST_DATA
+    const bool is_capture = board.isMoveCapture(prev_move);
+    std::string fen_prev = Print::board_state_to_fen(board.grid, board.extra, prev_move.piece.team, 1, 0) + ";";
+#endif
+    board.movePiece(prev_move);
+    if (Check::hasLostKing(board))  return 0;
+#ifndef CREATING_MOVE_TEST_DATA
+    std::ofstream file(main_folder_path + "/Test/gtest/datasets/atomic_data.txt", std::ios::out | std::ios::app);
+        file << fen_prev;
+        file << Print::move_as_string(prev_move, is_capture) << ";";
+        file << Print::board_state_to_fen(board.grid, board.extra, Team::getEnemyTeam(prev_move.piece.team), 1, 0) << '\n';
+#endif
+    if (depth <= 0) return 1;
+    uint64_t amount_boards = 0;
+
+    std::vector<Move> move_list;
+    PossibleMoves::getAllPossibleAtomicMoves(board, move_list, team);
+
+    for (const Move next_move : move_list) {
+        amount_boards += Perft_impl(board, depth - 1, enemy, next_move);
+    }
+    return amount_boards;
+}
+
+inline uint64_t Perft(Board board, int depth, Team::Team team) {
+    Team::Team enemy = Team::getEnemyTeam(team);
+    if (!board.positions.hasPiece(Team::WHITE, PieceType::KING) ||
+        !board.positions.hasPiece(Team::BLACK, PieceType::KING))
+        return 0;
+
+    if (depth <= 0) return 1;
+    uint64_t amount_boards = 0;
+
+    std::vector<Move> move_list;
+    PossibleMoves::getAllPossibleAtomicMoves(board, move_list, team);
+
+    for (const Move move : move_list) {
+        amount_boards += Perft_impl(board, depth - 1, enemy, move);
+    }
+    return amount_boards;
+}
+
+#define PERFT 1
+
+void test_perft() {
+    // /home/LapisApple/UNI/s01/PK1/tim.apel/ChessProject/Test/gtest/datasets/perft.txt
+    // C:/Users/timap/Documents/UNI/UniGitlab/C++1/tim.apel/ChessProject/Test/gtest/datasets/perft.txt
+    // "C:/Users/timap/Documents/UNI/UniGitlab/C++1/tim.apel/ChessProject/Test/gtest/datasets/perft_short.txt
+    // todo: remove this or change it to not need recompiling for different users
+    std::ifstream file(main_folder_path + "/Test/gtest/datasets/perft.txt");
+    assert(file.good());
+    std::string line;
+    while(std::getline(file, line)) {
+        std::istringstream line_stream(line);
+        std::string fen_str;
+
+        std::getline(line_stream, fen_str, ';');
+
+        Fen fen;
+        try {
+            std::cout << fen_str << "\n" << std::endl ;
+            fen = Fen::buildFenFromStr(fen_str);
+        } catch (FenParsingException fenException) {
+            std::cerr << fenException.what();
+        }
+
+        Board board = Board(fen);
+
+        std::string perft_str;
+        std::vector<uint64_t> perft_data = {0};
+        while (std::getline(line_stream, perft_str, ';')) {
+            int64_t perf_res = std::stoi(perft_str.substr(3));
+            perft_data.push_back(perf_res);
+        }
+
+
+
+        for (int i = PERFT; (i < perft_data.size()) && (i <= PERFT); ++i) {
+            std::cout << fen_str << "\n" << " depth: " << i <<"perft: " ;
+            uint64_t perft = Perft(board, i, fen.current_player);
+            std::cout << perft << " expected: " << perft_data[i] << "\n\n" << std::flush;
+            // assert(perft == perft_data[i]);
+        }
+    }
+}
 
 int main() {
-    atomicPerft();
+    test_perft();
+    // atomicPerft();
     std::cout << "fin";
     // Chess::mainGameLoop();
 }
