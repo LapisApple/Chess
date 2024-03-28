@@ -101,14 +101,14 @@ bool Check::isChecked(const Board& board, Team::Team team, int8_t king_pos) noex
                                   Piece(enemy_team, PieceType::PAWN));
     if (is_check) return true;
   }
-
+#ifdef  STANDARD_CHESS
   // king test
   constexpr Vec2 king_offset_list[AMOUNT_KING_OFFSET] = {{-1, -1}, {1, -1}, {-1, 1}, {1, 1},
                                                          {0, -1},  {0, 1},  {-1, 0}, {1, 0}};
   is_check =
       king_check_offsets(board, king_offset_list, AMOUNT_KING_OFFSET, king_pos_2D, Piece(enemy_team, PieceType::KING));
   if (is_check) return true;
-
+#endif
   // Bishop + 1/2 QUEEN
   if (board.positions.hasPiece(enemy_team, PieceType::BISHOP) ||
       board.positions.hasPiece(enemy_team, PieceType::QUEEN)) {

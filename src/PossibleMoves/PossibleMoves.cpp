@@ -100,12 +100,23 @@ static inline bool king_is_check_during_castling_move(const Board& board, Piece 
   const int end = king_pos + 3 * step;
   Move move = {king, king_pos, -1, OptionalPieceType::nullopt(), SlimOptional<SpecialMove>::nullopt()};
 
-  for (int current_pos = king_pos + step; current_pos != end; current_pos = current_pos + step) {
-    move.to = static_cast<int8_t>(current_pos);
+  // 1 in dir
+    move.to = static_cast<int8_t>(king_pos + step);
     tempBoard.movePiece(move);
     if (Check::actualAtomicCheck(tempBoard, king.team, move.to)) return true;
     move.from = move.to;
-  }
+
+
+    // go back for castling
+    move.to = king_pos;
+    tempBoard.movePiece(move);
+    move.from = move.to;
+
+    // actual castle
+    move.to = static_cast<int8_t>(king_pos +  2* step);
+    move.specialMove.data = step == -1 ? SpecialMove::CastleQueenSide : SpecialMove::CastleKingSide;
+    tempBoard.movePiece(move);
+    if (Check::actualAtomicCheck(tempBoard, king.team, move.to)) return true;
 
   return false;
 }
