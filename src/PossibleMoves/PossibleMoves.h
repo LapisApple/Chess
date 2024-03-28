@@ -49,6 +49,8 @@ constexpr void trimBothKingsErasedAtOnce(const Board& board, std::vector<Move>& 
     for (int64_t i = move_list_size - 1; i >= 0; --i) {
         const Move& move = move_list[i];
 
+        if (!board.isMoveCapture(move)) continue;
+
         if (surroundingKingAmount(board, Vec2::newVec2(move.to)) > 1) move_list.erase(move_list.begin() + i);
     }
 }
@@ -61,7 +63,7 @@ constexpr void trimBothKingsErasedAtOnce(const Board& board, std::vector<Move>& 
     for (int64_t i = move_list_size - 1; i >= 0; --i) {
         const Move& move = move_list[i];
 
-        if ((move.piece.type == PieceType::KING) && (board.grid[move.to].team == Team::NONE)) {
+        if ((move.piece.type == PieceType::KING) && (board.grid[move.to].team != Team::NONE)) {
             move_list.erase(move_list.begin() + i);
         }
     }

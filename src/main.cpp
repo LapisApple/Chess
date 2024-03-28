@@ -13,6 +13,24 @@
 
 #include "../Test/Main_Folder_Path_For_Testing.h"
 
+namespace Check {
+    bool atomicCheck(const Board& board, Team::Team player) {
+        Team::Team enemy = Team::getEnemyTeam(player);
+
+        std::vector<Move> move_list;
+        PossibleMoves::getAllPossibleAtomicMoves(board, move_list, enemy);
+
+        for (const Move& move : move_list) {
+            Board tempBoard = board;
+            tempBoard.movePiece(move);
+            const bool lost_player_king = !tempBoard.positions.hasPiece(player, PieceType::KING);
+            if (lost_player_king) return true;
+        }
+
+        return false;
+    }
+}
+
 // Perft without Undo
 inline uint64_t Perft_impl(Board board, int depth, Team::Team team, Move prev_move) {
     Team::Team enemy = Team::getEnemyTeam(team);
@@ -20,6 +38,7 @@ inline uint64_t Perft_impl(Board board, int depth, Team::Team team, Move prev_mo
 
     board.movePiece(prev_move);
     if (Check::hasLostKing(board)) return 0;
+    if (Check::atomicCheck(board, enemy)) return 0;
 
     if (depth <= 0) return 1;
     uint64_t amount_boards = 0;
@@ -47,7 +66,7 @@ inline uint64_t Perft(Board board, int depth, Team::Team team) {
 
     for (const Move move : move_list) {
         uint64_t amount = Perft_impl(board, depth - 1, enemy, move);
-        std::cout << Print::move_as_string(move, board.isMoveCapture(move)) << " - " << amount << '\n';
+        // std::cout << Print::move_as_string(move, board.isMoveCapture(move)) << " - " << amount << '\n';
         amount_boards += amount;
     }
     return amount_boards;
