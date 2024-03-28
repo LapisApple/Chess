@@ -85,7 +85,11 @@ class Board {
 
     ChessPos pos_of_passantable_pawn = extra.getPosOfPassantablePiece();
     const Piece capture = grid.movePiece(move, pos_of_passantable_pawn);
+#ifdef STANDARD_CHESS
     positions.movePiece(move, SlimOptional(capture), pos_of_passantable_pawn);
+#else
+    positions = Board_Positions(this->grid);
+#endif
     extra.movePiece(move, capture);
 
 #ifndef NO_ASSERTS

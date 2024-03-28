@@ -11,6 +11,7 @@
 #include "../../Types/Move/ExecutedMove.h"
 #include "../../Types/Move/Move.h"
 #include "../../Types/SlimOptional.h"
+#include "../../Types/Vec2.h"
 
 /*
  *     array indexes:
@@ -85,6 +86,19 @@ class Board_8x8 {
     return board[i];
   };
 
+  constexpr void explodeArea(Vec2 pos) {
+      for (int8_t x = -1; x <= 1; ++x) {
+          for (int8_t y = -1; y <= 1; ++y) {
+              Vec2 offset = Vec2(x, y);
+              Vec2 capturePos = pos + offset;
+
+              if (capturePos.outsideBoard()) continue;
+              if (board[capturePos.getPos()].type == PieceType::PAWN) continue;
+              board[capturePos.getPos()] = Piece::getEmpty();
+          }
+      }
+  }
+
   /**
    * @brief executes the given move and updates any needed values
    * @param move the move to be executed
@@ -123,6 +137,13 @@ class Board_8x8 {
       default:
         break;
     }
+
+#ifndef STANDARD_CHESS
+// Explosion
+      if (capture.type != PieceType::NONE) explodeArea(Vec2::newVec2(move.to));
+      // Pawn being removed after capturing another Pawn
+      if (move.piece.type == PieceType::PAWN && capture.type == PieceType::PAWN) board[move.to] = Piece::getEmpty();
+#endif
 
     return capture;
   }

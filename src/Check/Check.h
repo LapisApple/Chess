@@ -19,4 +19,14 @@ namespace Check {
  * @return true if the player is in Check, otherwise false
  */
 bool isChecked(const Board& board, Team::Team team, int8_t king_pos) noexcept;
+
+#ifndef  STANDARD_CHESS
+
+constexpr bool hasLostKing(const Board& board) noexcept {
+    if (!board.positions.hasPiece(Team::WHITE, PieceType::KING)) return true;
+    if (!board.positions.hasPiece(Team::BLACK, PieceType::KING)) return true;
+    return false;
+}
+
+#endif
 }  // namespace Check

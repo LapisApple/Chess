@@ -174,11 +174,13 @@ void getPossiblePawnMove(const Board& board, std::vector<Move>& moveVec, Piece p
     const Piece capturePiece = board.grid[to];
 
     const bool canCapture = enemyTeam == capturePiece.team;
+#ifndef EN_PASSANT
     const bool enPassantExists = board.extra.getPassantPos().has_value();
-
+#endif
     if (canCapture) {
       addToMoveVecWithPossiblePromotion(to);
     }
+#ifndef EN_PASSANT
     if (enPassantExists) {
       const int8_t passantablePiecePos = board.extra.getPassantPos().data;
       const bool enPassantCorrectPos = (to == passantablePiecePos);
@@ -191,6 +193,7 @@ void getPossiblePawnMove(const Board& board, std::vector<Move>& moveVec, Piece p
         move.specialMove = SlimOptional<SpecialMove>::nullopt();
       }
     }
+#endif
   }
 }
 
@@ -216,10 +219,9 @@ void getPossibleKingMove(const Board& board, std::vector<Move>& moveVec, Piece k
     move.to = to.data;
     moveVec.push_back(move);
   }
-
+#ifndef CASTLING
   const int8_t teamOffset = king.team == Team::WHITE ? ChessConstants::start_white_queen_side_castle_pos
                                                      : ChessConstants::start_black_queen_side_castle_pos;
-
   // check if king can castle Queen Side
   int8_t castle_pos = static_cast<int8_t>(0 + teamOffset);
   if (board.extra.getCastlingRights(castle_pos) &&
@@ -239,6 +241,7 @@ void getPossibleKingMove(const Board& board, std::vector<Move>& moveVec, Piece k
     move.specialMove = SlimOptional(SpecialMove::CastleKingSide);
     moveVec.push_back(move);
   }
+#endif
 }
 
 /**

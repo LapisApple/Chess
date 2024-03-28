@@ -19,13 +19,13 @@ inline uint64_t Perft_impl(Board board, int depth, Team::Team team, Move prev_mo
     // get the new board
 
     board.movePiece(prev_move);
-    if (Check::isChecked(board, enemy, board.positions.getKingPos(enemy))) return 0;
+    if (Check::hasLostKing(board)) return 0;
 
     if (depth <= 0) return 1;
     uint64_t amount_boards = 0;
 
     std::vector<Move> move_list;
-    PossibleMoves::getAllPossibleMoves(board, move_list, team);
+    PossibleMoves::getAllPossibleAtomicMoves(board, move_list, team);
 
     for (const Move next_move : move_list) {
         amount_boards += Perft_impl(board, depth - 1, enemy, next_move);
@@ -43,20 +43,22 @@ inline uint64_t Perft(Board board, int depth, Team::Team team) {
     uint64_t amount_boards = 0;
 
     std::vector<Move> move_list;
-    PossibleMoves::getAllPossibleMoves(board, move_list, team);
+    PossibleMoves::getAllPossibleAtomicMoves(board, move_list, team);
 
     for (const Move move : move_list) {
-        amount_boards += Perft_impl(board, depth - 1, enemy, move);
+        uint64_t amount = Perft_impl(board, depth - 1, enemy, move);
+        std::cout << Print::move_as_string(move, board.isMoveCapture(move)) << " - " << amount << '\n';
+        amount_boards += amount;
     }
     return amount_boards;
 }
 
 #define GARBAGE_DATA 3
-#define MAX_PERFT 4
+#define MAX_PERFT 1
 #define MIN_PERFT 1
 
 void atomicPerft() {
-    std::ifstream file(main_folder_path + "/Test/gtest/datasets/atomic_perft.txt");
+    std::ifstream file(main_folder_path + "/Test/gtest/datasets/atomic_perft_short.txt");
     assert(file.good());
     std::string line;
     while (std::getline(file, line)) {
@@ -84,7 +86,9 @@ void atomicPerft() {
 
         for (uint64_t i = MIN_PERFT; (i < perft_data.size()) && (i <= MAX_PERFT); ++i) {
             uint64_t perft = Perft(board, static_cast<int>(i), fen.current_player);
-            std::cout << perft;
+
+            std::cout << fen_str << '\n';
+            std::cout << perft << " - " << perft_data[i] << "\n\n";
             assert(perft == perft_data[i]);
         }
     }
@@ -93,5 +97,6 @@ void atomicPerft() {
 
 int main() {
     atomicPerft();
-    Chess::mainGameLoop();
+    std::cout << "fin";
+    // Chess::mainGameLoop();
 }
