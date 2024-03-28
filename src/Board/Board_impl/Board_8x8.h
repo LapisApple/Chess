@@ -145,6 +145,9 @@ class Board_8x8 {
       if (was_move_en_passant) assert(move.extra.getPosOfPassantablePiece().has_value());
 #endif
       const int8_t capture_pos = was_move_en_passant ? move.extra.getPosOfPassantablePiece().data : move.move.to;
+#ifndef NO_BOUNDS_CHECKS
+      assert(capture_pos >= 0 && capture_pos < 64);
+#endif
       board[capture_pos] = move.capture.data;
     }
 

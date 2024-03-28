@@ -13,7 +13,7 @@ int getEval(const std::string_view& fen_str) {
     std::cerr << fenException.what() << std::endl;
     std::terminate();
   }
-  ChessGame board = ChessGame(fen);
+  ChessGame board = ChessGame(fen, Team::BLACK);
 
   int score = board.evaluate();
   return score;

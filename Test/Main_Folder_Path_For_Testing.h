@@ -7,10 +7,10 @@
 
 /*
  example:
- main_folder_path = "/home/LapisApple/UNI/s01/PK1/tim.apel/ChessProject"
- main_folder_path = "C:/Users/timap/Documents/UNI/UniGitlab/C++1/tim.apel/ChessProject";
+ main_folder_path = "/home/LapisApple/UNI/s01/PK1/tim.apel/project"
+ main_folder_path = "C:/Users/timap/Documents/UNI/UniGitlab/C++1/tim.apel/project";
 */
-inline const std::string main_folder_path = "/home/LapisApple/UNI/s01/PK1/tim.apel/ChessProject";
+inline const std::string main_folder_path = "/home/LapisApple/UNI/s01/PK1/tim.apel/project";
 
 // error message for missing folder path
 inline const char* missing_main_folder_path_error =

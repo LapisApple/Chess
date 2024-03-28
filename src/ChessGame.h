@@ -61,13 +61,13 @@ class ChessGame {
    * @brief the current number of half moves since last pawn move or capture
    */
   int half_moves;
-    /**
-     * @brief all previous game state's as a stack of executed moves half moves
-     */
+  /**
+   * @brief all previous game state's as a stack of executed moves half moves
+   */
   std::vector<History> history;
-    /**
-      * @brief the team of the bot
-      */
+  /**
+   * @brief the team of the bot
+   */
   Team::Team bot_color;
 
   /**
@@ -104,7 +104,8 @@ class ChessGame {
   /**
    * @brief constructs the Starting Chess Game State.
    */
-  ChessGame() : board(Board()), current_move_maker(Team::WHITE), current_turn(1), half_moves(0), bot_color(Team::BLACK) {}
+  inline ChessGame()
+      : board(Board()), current_move_maker(Team::WHITE), current_turn(1), half_moves(0), bot_color(Team::BLACK) {}
 
   /**
    * @brief constructs a new game from a preProcessed FEN notated String.
@@ -112,8 +113,12 @@ class ChessGame {
    * @param fen The preprocessed Fen object representing a Chess state in Fen Notation
    * @param bot_team the team that the bot will be representing
    */
-  explicit ChessGame(const Fen& fen, Team::Team bot_team) :
-          board(Board(fen)), current_move_maker(fen.current_player), current_turn(fen.current_turn), half_moves(fen.amount_half_moves), bot_color(bot_team) {}
+  explicit inline ChessGame(const Fen& fen, Team::Team bot_team)
+      : board(Board(fen)),
+        current_move_maker(fen.current_player),
+        current_turn(fen.current_turn),
+        half_moves(fen.amount_half_moves),
+        bot_color(bot_team) {}
 
   // make moves
 
@@ -165,7 +170,7 @@ class ChessGame {
     half_moves = last_elem.half_turn_before_move;
 
     if (current_move_maker == Team::WHITE) current_turn--;
-      current_move_maker = Team::getEnemyTeam(current_move_maker);
+    current_move_maker = Team::getEnemyTeam(current_move_maker);
 
     history.pop_back();
     return Result::SUCCESS;
@@ -178,8 +183,8 @@ class ChessGame {
    * @param os The output stream to print the board to
    */
   inline void print_current_board(std::ostream& os) const {
-      const std::string_view team = (current_move_maker == Team::WHITE) ? "White" : "Black";
-      const std::string_view bot = (current_move_maker == bot_color) ? "Bot" : "Player";
+    const std::string_view team = (current_move_maker == Team::WHITE) ? "White" : "Black";
+    const std::string_view bot = (current_move_maker == bot_color) ? "Bot" : "Player";
     os << "Current Turn: " << team << " (" << bot << ")\n";
     Print::print_board_grid_state(board.grid, os);
     os << std::endl;
@@ -263,19 +268,15 @@ class ChessGame {
    */
   [[nodiscard]] inline int evaluate() const { return evaluateBoard(board, current_move_maker); }
 
-    /**
-     * @brief Checking who can currently move their pieces
-     *
-     * @return true if the player can currently make a move, false if the bot can make the next move
-     */
-    [[nodiscard]] constexpr bool isPlayerTurn() {
-        return bot_color != current_move_maker;
-    }
+  /**
+   * @brief Checking who can currently move their pieces
+   *
+   * @return true if the player can currently make a move, false if the bot can make the next move
+   */
+  [[nodiscard]] constexpr bool isPlayerTurn() { return bot_color != current_move_maker; }
 
-    /**
-     * @return the amount of moves that can be undone (i.e. how many moves have been played so far)
-     */
-    [[nodiscard]] constexpr uint64_t amountOfUndoableMoves() {
-        return history.size();
-    }
+  /**
+   * @return the amount of moves that can be undone (i.e. how many moves have been played so far)
+   */
+  [[nodiscard]] inline uint64_t amountOfUndoableMoves() { return history.size(); }
 };

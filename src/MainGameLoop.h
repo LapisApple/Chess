@@ -6,7 +6,6 @@
 
 #include "ChessGame.h"
 
-
 namespace Chess {
-    [[noreturn]] void mainGameLoop();
+[[noreturn]] void mainGameLoop();
 }

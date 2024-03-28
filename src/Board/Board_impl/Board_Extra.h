@@ -3,8 +3,8 @@
 //
 
 #pragma once
-#include "../../Types/ChessConstants.h"
 #include "../../Types/BasicChessTypes.h"
+#include "../../Types/ChessConstants.h"
 #include "../../Types/Move/Move.h"
 #include "../../Types/SlimOptional.h"
 

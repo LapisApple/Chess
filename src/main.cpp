@@ -4,6 +4,4 @@
 
 #include "MainGameLoop.h"
 
-int main() {
-  Chess::mainGameLoop();
-}
+int main() { Chess::mainGameLoop(); }
