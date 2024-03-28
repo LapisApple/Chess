@@ -91,8 +91,11 @@ constexpr static bool path_is_free_between_king_and_castle(const Board& board, i
  * @return false if the king would be in Check during castling, false otherwise
  */
 static inline bool king_is_check_during_castling_move(const Board& board, Piece king, int8_t king_pos, int8_t step) {
+#ifdef STANDARD_CHESS
   if (Check::isChecked(board, king.team, king_pos)) return true;
-
+#else
+    if (Check::actualAtomicCheck(board, king.team, king_pos)) return true;
+#endif
   Board tempBoard = board;
   const int end = king_pos + 3 * step;
   Move move = {king, king_pos, -1, OptionalPieceType::nullopt(), SlimOptional<SpecialMove>::nullopt()};
@@ -100,7 +103,7 @@ static inline bool king_is_check_during_castling_move(const Board& board, Piece 
   for (int current_pos = king_pos + step; current_pos != end; current_pos = current_pos + step) {
     move.to = static_cast<int8_t>(current_pos);
     tempBoard.movePiece(move);
-    if (Check::isChecked(tempBoard, king.team, move.to)) return true;
+    if (Check::actualAtomicCheck(tempBoard, king.team, move.to)) return true;
     move.from = move.to;
   }
 
