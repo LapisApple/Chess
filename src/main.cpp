@@ -38,7 +38,7 @@ inline uint64_t Perft_impl(Board board, int depth, Team::Team team, Move prev_mo
 
     board.movePiece(prev_move);
     if (Check::hasLostKing(board)) return 0;
-    if (Check::atomicCheck(board, enemy)) return 0;
+    if (Check::actualAtomicCheck(board, enemy, board.positions.getKingPos(enemy))) return 0;
 
     if (depth <= 0) return 1;
     uint64_t amount_boards = 0;

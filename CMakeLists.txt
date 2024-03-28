@@ -36,4 +36,5 @@ add_executable(Chess2
         src/Bot/Evaluation/Evaluate.cpp
         src/MainGameLoop.cpp
         src/MainGameLoop.h
+        src/AdjacentPieces.h
 )

@@ -12,6 +12,7 @@
 #include "../Types/BasicChessTypes.h"
 #include "../Types/Move/Move.h"
 #include "../Types/Vec2.h"
+#include "../AdjacentPieces.h"
 
 namespace PossibleMoves {
 /**
@@ -29,15 +30,12 @@ void getAllPossibleMoves(const Board& board, std::vector<Move>& moveVec, Team::T
 
 constexpr int surroundingKingAmount(const Board& board, Vec2 pos) {
     int kingAmount = 0;
-    for (int8_t x = -1; x <= 1; ++x) {
-        for (int8_t y = -1; y <= 1; ++y) {
-            Vec2 offset = Vec2(x, y);
-            Vec2 capturePos = pos + offset;
 
-            if (capturePos.outsideBoard()) continue;
-            if (board.grid[capturePos.getPos()].type == PieceType::KING) kingAmount++;
-        }
-    }
+    auto calculateKingAmount = [&kingAmount, &board](int8_t pos) {
+        if (board.grid[pos].type == PieceType::KING) kingAmount++;
+    };
+
+    forAllAdjacentPieces(pos, calculateKingAmount);
     return kingAmount;
 }
 
