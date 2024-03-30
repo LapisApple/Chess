@@ -132,9 +132,9 @@ inline uint64_t Perft_impl(Board board, int depth, Team::Team team, Move prev_mo
     if (Check::hasLostKing(board))  return 0;
 #ifndef CREATING_MOVE_TEST_DATA
     std::ofstream file(main_folder_path + "/Test/gtest/datasets/atomic_data.txt", std::ios::out | std::ios::app);
-        file << fen_prev;
-        file << Print::move_as_string(prev_move, is_capture) << ";";
-        file << Print::board_state_to_fen(board.grid, board.extra, Team::getEnemyTeam(prev_move.piece.team), 1, 0) << '\n';
+        file << 'B' << fen_prev;
+        file << 'M' << Print::move_as_string(prev_move, is_capture) << ";";
+        file << 'B' << Print::board_state_to_fen(board.grid, board.extra, Team::getEnemyTeam(prev_move.piece.team), 1, 0) << '\n';
 #endif
     if (depth <= 0) return 1;
     uint64_t amount_boards = 0;
